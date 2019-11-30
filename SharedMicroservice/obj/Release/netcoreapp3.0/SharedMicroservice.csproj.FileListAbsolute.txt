@@ -1,0 +1,8 @@
+C:\Users\Jailson\source\repos\CompanyMicroservice\SharedMicroservice\bin\Release\netcoreapp3.0\SharedMicroservice.deps.json
+C:\Users\Jailson\source\repos\CompanyMicroservice\SharedMicroservice\bin\Release\netcoreapp3.0\SharedMicroservice.dll
+C:\Users\Jailson\source\repos\CompanyMicroservice\SharedMicroservice\bin\Release\netcoreapp3.0\SharedMicroservice.pdb
+C:\Users\Jailson\source\repos\CompanyMicroservice\SharedMicroservice\obj\Release\netcoreapp3.0\SharedMicroservice.csprojAssemblyReference.cache
+C:\Users\Jailson\source\repos\CompanyMicroservice\SharedMicroservice\obj\Release\netcoreapp3.0\SharedMicroservice.AssemblyInfoInputs.cache
+C:\Users\Jailson\source\repos\CompanyMicroservice\SharedMicroservice\obj\Release\netcoreapp3.0\SharedMicroservice.AssemblyInfo.cs
+C:\Users\Jailson\source\repos\CompanyMicroservice\SharedMicroservice\obj\Release\netcoreapp3.0\SharedMicroservice.dll
+C:\Users\Jailson\source\repos\CompanyMicroservice\SharedMicroservice\obj\Release\netcoreapp3.0\SharedMicroservice.pdb

@@ -1,0 +1,105 @@
+version: '3.4'
+
+services:
+  auctionmicroservice:
+    image: auctionmicroservice:dev
+    build:
+      target: base
+      labels:
+        com.microsoft.created-by: "visual-studio"
+        com.microsoft.visual-studio.project-name: "AuctionMicroservice"
+    environment:
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      #- NUGET_FALLBACK_PACKAGES=$container_paths_to_fallback_packages_auctionmicroservice$
+    volumes:
+      - C:\Users\Jailson\source\repos\CompanyMicroservice\AuctionMicroservice:/app
+      - C:\Users\Jailson\source\repos\CompanyMicroservice:/src
+      - C:\Users\Jailson\vsdbg\vs2017u5:/remote_debugger:rw
+#$nuget_volume_mapping_auctionmicroservice$
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+    entrypoint: tail -f /dev/null
+    labels:
+      com.microsoft.visualstudio.debuggee.program: "dotnet"
+      #com.microsoft.visualstudio.debuggee.arguments: " $debuggee_arguments_probing_paths_auctionmicroservice$ \"bin/Debug/netcoreapp3.0/AuctionMicroservice.dll\""
+      com.microsoft.visualstudio.debuggee.workingdirectory: "/app"
+      com.microsoft.visualstudio.debuggee.killprogram: "/bin/sh -c \"if PID=$$(pidof dotnet); then kill $$PID; fi\""
+    tty: true
+  companymicroservice:
+    image: companymicroservice:dev
+    build:
+      target: base
+      labels:
+        com.microsoft.created-by: "visual-studio"
+        com.microsoft.visual-studio.project-name: "CompanyMicroservice"
+    environment:
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      #- NUGET_FALLBACK_PACKAGES=$container_paths_to_fallback_packages_companymicroservice$
+    volumes:
+      - C:\Users\Jailson\source\repos\CompanyMicroservice\CompanyMicroservice:/app
+      - C:\Users\Jailson\source\repos\CompanyMicroservice:/src
+      - C:\Users\Jailson\vsdbg\vs2017u5:/remote_debugger:rw
+#$nuget_volume_mapping_companymicroservice$
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+    entrypoint: tail -f /dev/null
+    labels:
+      com.microsoft.visualstudio.debuggee.program: "dotnet"
+      #com.microsoft.visualstudio.debuggee.arguments: " $debuggee_arguments_probing_paths_companymicroservice$ \"bin/Debug/netcoreapp3.0/CompanyMicroservice.dll\""
+      com.microsoft.visualstudio.debuggee.workingdirectory: "/app"
+      com.microsoft.visualstudio.debuggee.killprogram: "/bin/sh -c \"if PID=$$(pidof dotnet); then kill $$PID; fi\""
+    tty: true
+
+  stopwatchmicroservice:
+    image: stopwatchmicroservice:dev
+    build:
+      target: base
+      labels:
+        com.microsoft.created-by: "visual-studio"
+        com.microsoft.visual-studio.project-name: "StopwatchMicroservice"
+    environment:
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      #- NUGET_FALLBACK_PACKAGES=$container_paths_to_fallback_packages_stopwatchmicroservice$
+    volumes:
+      - C:\Users\Jailson\source\repos\CompanyMicroservice\StopwatchMicroservice:/app
+      - C:\Users\Jailson\source\repos\CompanyMicroservice:/src
+      - C:\Users\Jailson\vsdbg\vs2017u5:/remote_debugger:rw
+#$nuget_volume_mapping_stopwatchmicroservice$
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+    entrypoint: tail -f /dev/null
+    labels:
+      com.microsoft.visualstudio.debuggee.program: "dotnet"
+      #com.microsoft.visualstudio.debuggee.arguments: " $debuggee_arguments_probing_paths_stopwatchmicroservice$ \"bin/Debug/netcoreapp3.0/StopwatchMicroservice.dll\""
+      com.microsoft.visualstudio.debuggee.workingdirectory: "/app"
+      com.microsoft.visualstudio.debuggee.killprogram: "/bin/sh -c \"if PID=$$(pidof dotnet); then kill $$PID; fi\""
+    tty: true
+
+  usermicroservice:
+    image: usermicroservice:dev
+    build:
+      target: base
+      labels:
+        com.microsoft.created-by: "visual-studio"
+        com.microsoft.visual-studio.project-name: "UserMicroservice"
+    environment:
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      #- NUGET_FALLBACK_PACKAGES=$container_paths_to_fallback_packages_usermicroservice$
+    volumes:
+      - C:\Users\Jailson\source\repos\CompanyMicroservice\UserMicroservice:/app
+      - C:\Users\Jailson\source\repos\CompanyMicroservice:/src
+      - C:\Users\Jailson\vsdbg\vs2017u5:/remote_debugger:rw
+#$nuget_volume_mapping_usermicroservice$
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+    entrypoint: tail -f /dev/null
+    labels:
+      com.microsoft.visualstudio.debuggee.program: "dotnet"
+      #com.microsoft.visualstudio.debuggee.arguments: " $debuggee_arguments_probing_paths_usermicroservice$ \"bin/Debug/netcoreapp3.0/UserMicroservice.dll\""
+      com.microsoft.visualstudio.debuggee.workingdirectory: "/app"
+      com.microsoft.visualstudio.debuggee.killprogram: "/bin/sh -c \"if PID=$$(pidof dotnet); then kill $$PID; fi\""
+    tty: true

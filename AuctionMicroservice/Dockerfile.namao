@@ -1,0 +1,6 @@
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-buster-slim
+WORKDIR /app
+
+COPY ./dist .
+
+ENTRYPOINT ["dotnet", "AuctionMicroservice.dll"]

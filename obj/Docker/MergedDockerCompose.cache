@@ -1,0 +1,81 @@
+networks:
+  pamicroservice-network:
+    driver: host
+services:
+  auctionmicroservice:
+    build:
+      context: C:\Users\Jailson\source\repos\CompanyMicroservice
+      dockerfile: AuctionMicroservice/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTPS_PORT: '44365'
+      ASPNETCORE_URLS: https://+:443;http://+:80
+    image: auctionmicroservice
+    networks:
+      pamicroservice-network: {}
+    ports:
+    - published: 64921
+      target: 80
+    - published: 44365
+      target: 443
+    volumes:
+    - C:\Users\Jailson\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
+    - C:\Users\Jailson\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+  companymicroservice:
+    build:
+      context: C:\Users\Jailson\source\repos\CompanyMicroservice
+      dockerfile: CompanyMicroservice/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTPS_PORT: '44399'
+      ASPNETCORE_URLS: https://+:443;http://+:80
+    image: companymicroservice
+    networks:
+      pamicroservice-network: {}
+    ports:
+    - published: 53544
+      target: 80
+    - published: 44399
+      target: 443
+    volumes:
+    - C:\Users\Jailson\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
+    - C:\Users\Jailson\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+  stopwatchmicroservice:
+    build:
+      context: C:\Users\Jailson\source\repos\CompanyMicroservice
+      dockerfile: StopwatchMicroservice/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTPS_PORT: '44367'
+      ASPNETCORE_URLS: https://+:443;http://+:80
+    image: stopwatchmicroservice
+    networks:
+      pamicroservice-network: {}
+    ports:
+    - published: 60311
+      target: 80
+    - published: 44367
+      target: 443
+    volumes:
+    - C:\Users\Jailson\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
+    - C:\Users\Jailson\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+  usermicroservice:
+    build:
+      context: C:\Users\Jailson\source\repos\CompanyMicroservice
+      dockerfile: UserMicroservice/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTPS_PORT: '44357'
+      ASPNETCORE_URLS: https://+:443;http://+:80
+    image: usermicroservice
+    networks:
+      pamicroservice-network: {}
+    ports:
+    - published: 60382
+      target: 80
+    - published: 44357
+      target: 443
+    volumes:
+    - C:\Users\Jailson\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
+    - C:\Users\Jailson\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+version: '3.4'

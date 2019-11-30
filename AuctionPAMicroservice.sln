@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29326.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompanyMicroservice", "CompanyMicroservice\CompanyMicroservice.csproj", "{F759578C-26F5-4B15-A868-6F17075C92D0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8574D901-DC25-4165-8576-245D9BCF2A10} = {8574D901-DC25-4165-8576-245D9BCF2A10}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedMicroservice", "SharedMicroservice\SharedMicroservice.csproj", "{8574D901-DC25-4165-8576-245D9BCF2A10}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserMicroservice", "UserMicroservice\UserMicroservice.csproj", "{BD8EB71D-2F27-4C8C-92F8-718213B0B2EB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuctionMicroservice", "AuctionMicroservice\AuctionMicroservice.csproj", "{EC2DD7CB-15AF-4E15-8CE4-CF19B1645B1F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StopwatchMicroservice", "StopwatchMicroservice\StopwatchMicroservice.csproj", "{44397571-58DB-4DC5-9978-8DE9D2DEE375}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F759578C-26F5-4B15-A868-6F17075C92D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F759578C-26F5-4B15-A868-6F17075C92D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F759578C-26F5-4B15-A868-6F17075C92D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F759578C-26F5-4B15-A868-6F17075C92D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8574D901-DC25-4165-8576-245D9BCF2A10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8574D901-DC25-4165-8576-245D9BCF2A10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8574D901-DC25-4165-8576-245D9BCF2A10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8574D901-DC25-4165-8576-245D9BCF2A10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD8EB71D-2F27-4C8C-92F8-718213B0B2EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD8EB71D-2F27-4C8C-92F8-718213B0B2EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD8EB71D-2F27-4C8C-92F8-718213B0B2EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD8EB71D-2F27-4C8C-92F8-718213B0B2EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC2DD7CB-15AF-4E15-8CE4-CF19B1645B1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC2DD7CB-15AF-4E15-8CE4-CF19B1645B1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC2DD7CB-15AF-4E15-8CE4-CF19B1645B1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC2DD7CB-15AF-4E15-8CE4-CF19B1645B1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44397571-58DB-4DC5-9978-8DE9D2DEE375}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44397571-58DB-4DC5-9978-8DE9D2DEE375}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44397571-58DB-4DC5-9978-8DE9D2DEE375}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44397571-58DB-4DC5-9978-8DE9D2DEE375}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ECA2CAA0-B604-430C-BE00-F0D12E54F795}
+	EndGlobalSection
+EndGlobal
