@@ -13,7 +13,6 @@ namespace CompanyMicroservice.Models
         public string Email { get; set; }
         public string Whats { get; set; }
     }
-
     //Add-Migration InitialCreate
     //Update-Database
 }

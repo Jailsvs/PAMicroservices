@@ -6,3 +6,13 @@ C:\Users\Jailson\source\repos\CompanyMicroservice\SharedMicroservice\obj\Release
 C:\Users\Jailson\source\repos\CompanyMicroservice\SharedMicroservice\obj\Release\netcoreapp3.0\SharedMicroservice.AssemblyInfo.cs
 C:\Users\Jailson\source\repos\CompanyMicroservice\SharedMicroservice\obj\Release\netcoreapp3.0\SharedMicroservice.dll
 C:\Users\Jailson\source\repos\CompanyMicroservice\SharedMicroservice\obj\Release\netcoreapp3.0\SharedMicroservice.pdb
+C:\Users\jails\Documents\PAMicroservices\SharedMicroservice\bin\Release\netcoreapp3.0\SharedMicroservice.deps.json
+C:\Users\jails\Documents\PAMicroservices\SharedMicroservice\bin\Release\netcoreapp3.0\SharedMicroservice.dll
+C:\Users\jails\Documents\PAMicroservices\SharedMicroservice\bin\Release\netcoreapp3.0\SharedMicroservice.pdb
+C:\Users\jails\Documents\PAMicroservices\SharedMicroservice\obj\Release\netcoreapp3.0\SharedMicroservice.csproj.AssemblyReference.cache
+C:\Users\jails\Documents\PAMicroservices\SharedMicroservice\obj\Release\netcoreapp3.0\SharedMicroservice.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jails\Documents\PAMicroservices\SharedMicroservice\obj\Release\netcoreapp3.0\SharedMicroservice.AssemblyInfoInputs.cache
+C:\Users\jails\Documents\PAMicroservices\SharedMicroservice\obj\Release\netcoreapp3.0\SharedMicroservice.AssemblyInfo.cs
+C:\Users\jails\Documents\PAMicroservices\SharedMicroservice\obj\Release\netcoreapp3.0\SharedMicroservice.csproj.CoreCompileInputs.cache
+C:\Users\jails\Documents\PAMicroservices\SharedMicroservice\obj\Release\netcoreapp3.0\SharedMicroservice.dll
+C:\Users\jails\Documents\PAMicroservices\SharedMicroservice\obj\Release\netcoreapp3.0\SharedMicroservice.pdb

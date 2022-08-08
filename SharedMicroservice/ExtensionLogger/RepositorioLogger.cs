@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Data.SqlClient;
-using ExemploLogCore.Model;
+using Model;
 
-namespace ExemploLogCore.ExtensionLogger
+namespace ExtensionLogger
 {
     public class RepositorioLogger
     {

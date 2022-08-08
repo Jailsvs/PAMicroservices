@@ -1,8 +1,8 @@
 ﻿using System;
-using ExemploLogCore.Model;
+using Model;
 using Microsoft.Extensions.Logging;
 
-namespace ExemploLogCore.ExtensionLogger
+namespace ExtensionLogger
 {
     public class AppLogger : ILogger
     {

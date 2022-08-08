@@ -6415,19 +6415,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Jailson\\.nuget\\packages\\": {}
+    "C:\\Users\\jails\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Jailson\\source\\repos\\CompanyMicroservice\\SharedMicroservice\\SharedMicroservice.csproj",
+      "projectUniqueName": "C:\\Users\\jails\\Documents\\PAMicroservices\\SharedMicroservice\\SharedMicroservice.csproj",
       "projectName": "SharedMicroservice",
-      "projectPath": "C:\\Users\\Jailson\\source\\repos\\CompanyMicroservice\\SharedMicroservice\\SharedMicroservice.csproj",
-      "packagesPath": "C:\\Users\\Jailson\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Jailson\\source\\repos\\CompanyMicroservice\\SharedMicroservice\\obj\\",
+      "projectPath": "C:\\Users\\jails\\Documents\\PAMicroservices\\SharedMicroservice\\SharedMicroservice.csproj",
+      "packagesPath": "C:\\Users\\jails\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\jails\\Documents\\PAMicroservices\\SharedMicroservice\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Jailson\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\jails\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -6439,6 +6439,7 @@
       },
       "frameworks": {
         "netcoreapp3.0": {
+          "targetAlias": "netcoreapp3.0",
           "projectReferences": {}
         }
       },
@@ -6450,6 +6451,7 @@
     },
     "frameworks": {
       "netcoreapp3.0": {
+        "targetAlias": "netcoreapp3.0",
         "dependencies": {
           "Microsoft.DotNet.PlatformAbstractions": {
             "target": "Package",
@@ -6490,12 +6492,26 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[3.0.1, 3.0.1]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[3.0.0, 3.0.0]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[3.0.0, 3.0.0]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   }

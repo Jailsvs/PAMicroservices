@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    ".NETCoreApp,Version=v3.0": {
+    ".NETCoreApp,Version=v3.1": {
       "AutoMapper/9.0.0": {
         "type": "package",
         "dependencies": {
@@ -667,6 +667,18 @@
         },
         "build": {
           "build/netcoreapp2.0/Microsoft.EntityFrameworkCore.Design.props": {}
+        }
+      },
+      "Microsoft.EntityFrameworkCore.InMemory/3.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "3.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/Microsoft.EntityFrameworkCore.InMemory.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/Microsoft.EntityFrameworkCore.InMemory.dll": {}
         }
       },
       "Microsoft.EntityFrameworkCore.Relational/3.0.0": {
@@ -3684,6 +3696,19 @@
         "lib/netstandard2.1/Microsoft.EntityFrameworkCore.Design.xml",
         "microsoft.entityframeworkcore.design.3.0.0.nupkg.sha512",
         "microsoft.entityframeworkcore.design.nuspec"
+      ]
+    },
+    "Microsoft.EntityFrameworkCore.InMemory/3.0.0": {
+      "sha512": "tZaZ2Eh4fVCxfaObSjt1RN9FCjqIduirDXeqYD1mlzqQDHswKCZacGxV0aQ6LDFvLBj4/LvOq9fjQ1hzcUPBoQ==",
+      "type": "package",
+      "path": "microsoft.entityframeworkcore.inmemory/3.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.1/Microsoft.EntityFrameworkCore.InMemory.dll",
+        "lib/netstandard2.1/Microsoft.EntityFrameworkCore.InMemory.xml",
+        "microsoft.entityframeworkcore.inmemory.3.0.0.nupkg.sha512",
+        "microsoft.entityframeworkcore.inmemory.nuspec"
       ]
     },
     "Microsoft.EntityFrameworkCore.Relational/3.0.0": {
@@ -9384,10 +9409,11 @@
     }
   },
   "projectFileDependencyGroups": {
-    ".NETCoreApp,Version=v3.0": [
+    ".NETCoreApp,Version=v3.1": [
       "AutoMapper >= 9.0.0",
       "Microsoft.AspNetCore.Cors >= 2.2.0",
       "Microsoft.DotNet.PlatformAbstractions >= 3.0.0",
+      "Microsoft.EntityFrameworkCore.InMemory >= 3.0.0",
       "Microsoft.EntityFrameworkCore.SqlServer >= 3.0.0",
       "Microsoft.EntityFrameworkCore.Tools >= 3.0.0",
       "Microsoft.Extensions.Logging.Abstractions >= 3.0.0",
@@ -9401,33 +9427,34 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Jailson\\.nuget\\packages\\": {}
+    "C:\\Users\\jails\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Jailson\\source\\repos\\CompanyMicroservice\\CompanyMicroservice\\CompanyMicroservice.csproj",
+      "projectUniqueName": "C:\\Users\\jails\\Documents\\PAMicroservices\\CompanyMicroservice\\CompanyMicroservice.csproj",
       "projectName": "CompanyMicroservice",
-      "projectPath": "C:\\Users\\Jailson\\source\\repos\\CompanyMicroservice\\CompanyMicroservice\\CompanyMicroservice.csproj",
-      "packagesPath": "C:\\Users\\Jailson\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Jailson\\source\\repos\\CompanyMicroservice\\CompanyMicroservice\\obj\\",
+      "projectPath": "C:\\Users\\jails\\Documents\\PAMicroservices\\CompanyMicroservice\\CompanyMicroservice.csproj",
+      "packagesPath": "C:\\Users\\jails\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\jails\\Documents\\PAMicroservices\\CompanyMicroservice\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Jailson\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\jails\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "netcoreapp3.0"
+        "netcoreapp3.1"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "netcoreapp3.0": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
           "projectReferences": {
-            "C:\\Users\\Jailson\\source\\repos\\CompanyMicroservice\\SharedMicroservice\\SharedMicroservice.csproj": {
-              "projectPath": "C:\\Users\\Jailson\\source\\repos\\CompanyMicroservice\\SharedMicroservice\\SharedMicroservice.csproj"
+            "C:\\Users\\jails\\Documents\\PAMicroservices\\SharedMicroservice\\SharedMicroservice.csproj": {
+              "projectPath": "C:\\Users\\jails\\Documents\\PAMicroservices\\SharedMicroservice\\SharedMicroservice.csproj"
             }
           }
         }
@@ -9439,7 +9466,8 @@
       }
     },
     "frameworks": {
-      "netcoreapp3.0": {
+      "netcoreapp3.1": {
+        "targetAlias": "netcoreapp3.1",
         "dependencies": {
           "AutoMapper": {
             "target": "Package",
@@ -9450,6 +9478,10 @@
             "version": "[2.2.0, )"
           },
           "Microsoft.DotNet.PlatformAbstractions": {
+            "target": "Package",
+            "version": "[3.0.0, )"
+          },
+          "Microsoft.EntityFrameworkCore.InMemory": {
             "target": "Package",
             "version": "[3.0.0, )"
           },
@@ -9510,7 +9542,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   }

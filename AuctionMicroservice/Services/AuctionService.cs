@@ -21,7 +21,6 @@ namespace AuctionMicroservice.Services
         private readonly IAuctionRepository _auctionRepository;
         private IMapper _mapper;
 
-        
         public AuctionService(IAuctionRepository auctionRepository, IMapper mapper)
         {
             _auctionRepository = auctionRepository;
@@ -31,8 +30,7 @@ namespace AuctionMicroservice.Services
         public IEnumerable<AuctionProductIndexDTO> ReturnAll(int tenantId)
         {
             var auctions = _auctionRepository.Get(a => a.TenantId == tenantId && a.Closed != "T");
-            List<AuctionProductIndexDTO> auctionsDTOs = _mapper.Map<List<AuctionProductIndexDTO>>(auctions.ToList());
-            
+            List<AuctionProductIndexDTO> auctionsDTOs = _mapper.Map<List<AuctionProductIndexDTO>>(auctions.ToList());       
             return auctionsDTOs;
         }
 
@@ -45,23 +43,17 @@ namespace AuctionMicroservice.Services
         
         public int Add(AuctionProductDTO auctionProductDTO)
         {
-
             if ((auctionProductDTO.Closed == null) ||
                 (auctionProductDTO.Closed.Trim() == ""))
                 auctionProductDTO.Closed = "F";
 
             AuctionProduct auction = _mapper.Map<AuctionProduct>(auctionProductDTO);
-
-            //using (var scope = new TransactionScope())//TransactionScopeAsyncFlowOption.Enabled))
-            {
-                if (auction.Closed.Trim().Equals(""))
-                    auction.Closed = "F";
-                _auctionRepository.Insert(auction);//.ConfigureAwait(false);
-                if (!_auctionRepository.Commit())
-                    throw new Exception("Inserting a auction product failed on save.");
-                //scope.Complete();
-                return auction.Id;
-            }
+            if (auction.Closed.Trim().Equals(""))
+                auction.Closed = "F";
+            _auctionRepository.Insert(auction);
+            if (!_auctionRepository.Commit())
+                throw new Exception("Inserting a auction product failed on save.");
+            return auction.Id;
         }
 
 
@@ -77,13 +69,9 @@ namespace AuctionMicroservice.Services
             AuctionProduct auctionProduct = _mapper.Map<AuctionProduct>(auctionProductDTO);
             if (auctionProduct.Id != 0)
             {
-                //using (var scope = new TransactionScope())//TransactionScopeAsyncFlowOption.Enabled))
-                {
-                    _auctionRepository.Update(auctionProduct);//.ConfigureAwait(false);
-                    if (!_auctionRepository.Commit())
-                        throw new Exception("Updating a auction product failed on save.");
-                    //scope.Complete();
-                }
+                _auctionRepository.Update(auctionProduct);
+                if (!_auctionRepository.Commit())
+                    throw new Exception("Updating a auction product failed on save.");
             }
             
         }
@@ -105,14 +93,10 @@ namespace AuctionMicroservice.Services
                     var data = await response.Content.ReadAsStringAsync();
                     user = JsonConvert.DeserializeObject<UserIndexDTO>(data);
                 }
-               
-
                 return user;
-
             }
             catch (Exception)
             {
-              
                 return user;
             }
         }
@@ -144,7 +128,6 @@ namespace AuctionMicroservice.Services
         {
             AuctionBid auctionBid = _mapper.Map<AuctionBid>(auctionBidDTO);
             auctionBid.BidDate = DateTime.Now;
-
             AuctionProduct auction = _auctionRepository.Find(auctionBidDTO.AuctionProductId);
 
             if (auction.Closed == "T")
@@ -156,12 +139,7 @@ namespace AuctionMicroservice.Services
                 OpeningDate = auction.OpeningDate,
                 AuctionProductId = auctionBidDTO.AuctionProductId,
                 UserId = auctionBidDTO.UserId });
-
-            //using (var scope = new TransactionScope())// TransactionScopeAsyncFlowOption.Enabled))
-            {
-                _auctionRepository.InsertBid(auctionBid);
-                //scope.Complete();
-            }
+            _auctionRepository.InsertBid(auctionBid);
         }
 
         public void StartStopwatch(AuctionProductDTO auctionDTO)
@@ -171,7 +149,6 @@ namespace AuctionMicroservice.Services
             _httpClientStopWSrv.DefaultRequestHeaders.Accept.Clear();
             _httpClientStopWSrv.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
-            
             object data = new
             {
                 Id = auctionDTO.Id,

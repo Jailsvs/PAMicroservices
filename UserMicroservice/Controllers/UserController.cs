@@ -12,9 +12,7 @@ namespace UserMicroservice.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-
-        private readonly IUserService _userService;
-        
+        private readonly IUserService _userService;   
         public UserController(IUserService userService)
         {
             _userService = userService;
@@ -23,11 +21,6 @@ namespace UserMicroservice.Controllers
         [HttpGet]
         public IActionResult Get([FromQuery] int tenantId)
         {
-            /*var hostName = HttpContext.Request.Host;
-            TenantDTO tenant = await _userService.GetTenant("localhost:5001");//hostName
-            if (tenant == null)
-                throw new Exception("Tenant not found");*/
-
             var users = _userService.ReturnAll(tenantId);
             return new OkObjectResult(users);
         }
@@ -52,11 +45,6 @@ namespace UserMicroservice.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] UserDTO userDTO, [FromQuery] int tenantId)
         {
-            /*var hostName = HttpContext.Request.Host;
-            TenantDTO tenant = await _userService.GetTenant("localhost:5001");//hostName
-            if (tenant == null)
-                throw new Exception("Tenant not found");*/
-
             userDTO.TenantId = tenantId;
             int dto_id = _userService.Add(userDTO);
             return CreatedAtAction(nameof(Get), new { id = dto_id });

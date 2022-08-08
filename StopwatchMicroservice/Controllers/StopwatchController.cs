@@ -10,8 +10,6 @@ namespace StopwatchMicroservice.Controllers
     [Route("api/[controller]")] 
     public class StopwatchController : ControllerBase
     {
-
-        //private readonly ILogger<WeatherForecastController> _logger;
         private readonly IStopwatchService _stopwatchService;
         private readonly IHubContext<StopwatchHub> _hubContext;
 

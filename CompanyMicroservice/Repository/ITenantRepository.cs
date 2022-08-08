@@ -12,6 +12,5 @@ using SharedMicroservice.Repository;
 namespace CompanyMicroservice.Repository
 {
     public interface ITenantRepository : IRepository<Tenant>
-    {
-    }
+    {}
 }

@@ -4,17 +4,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-//using Microsoft.EntityFrameworkCore.SqlServer; //dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 using Microsoft.EntityFrameworkCore;
 using CompanyMicroservice.Repository;
 using CompanyMicroservice.Services;
 using AutoMapper;
 using CompanyMicroservice.MappingProfiles;
 using Microsoft.Extensions.Logging;
-using ExemploLogCore.ExtensionLogger;
-using Swashbuckle.AspNetCore.Swagger;
-using SharedMicroservice.Options;
+using ExtensionLogger;
 using SwaggerOptions = SharedMicroservice.Options.SwaggerOptions;
+using CompanyMicroservice.Models;
 
 namespace CompanyMicroservice
 {
@@ -30,21 +28,20 @@ namespace CompanyMicroservice
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-           
+
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddControllers();
             services.AddCors();
-
-            services.AddDbContext<CompanyContext>(o => o.UseSqlServer(Configuration.GetConnectionString("MicroservicesDB")));
-            services.AddDbContext<TenantContext>(o => o.UseSqlServer(Configuration.GetConnectionString("MicroservicesDB")));
+            /*services.AddDbContext<CompanyContext>(o => o.UseSqlServer(Configuration.GetConnectionString("MicroservicesDB")));
+            services.AddDbContext<TenantContext>(o => o.UseSqlServer(Configuration.GetConnectionString("MicroservicesDB")));*/
+            services.AddDbContext<CompanyContext>(o => o.UseInMemoryDatabase(Configuration.GetConnectionString("MicroservicesDB")));
+            services.AddDbContext<TenantContext>(o => o.UseInMemoryDatabase(Configuration.GetConnectionString("MicroservicesDB")));
 
             services.AddTransient<ICompanyRepository, CompanyRepository>();
             services.AddTransient<ICompanyService, CompanyService>();
-
             services.AddTransient<ITenantRepository, TenantRepository>();
             services.AddTransient<ITenantService, TenantService>();
 
-           
             var config = new AutoMapper.MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(typeof(TenantMappings));
@@ -53,9 +50,13 @@ namespace CompanyMicroservice
             IMapper mapper = config.CreateMapper();
             services.AddSingleton(mapper);
 
-            services.AddSwaggerGen(x => {
-                x.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Company Microservice",
-                Version = "v1"});
+            services.AddSwaggerGen(x =>
+            {
+                x.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                {
+                    Title = "Company Microservice",
+                    Version = "v1"
+                });
             });
 
         }
@@ -63,19 +64,15 @@ namespace CompanyMicroservice
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-        
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             app.UseCors(option => option.AllowAnyOrigin());
-
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -84,10 +81,8 @@ namespace CompanyMicroservice
             var swaggerOptions = new SwaggerOptions();
             Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
 
-            app.UseSwagger(option => {option.RouteTemplate = swaggerOptions.JsonRoute;  });
+            app.UseSwagger(option => { option.RouteTemplate = swaggerOptions.JsonRoute; });
             app.UseSwaggerUI(option => { option.SwaggerEndpoint(swaggerOptions.UIEndpoint, swaggerOptions.Description); });
-
-
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -95,9 +90,68 @@ namespace CompanyMicroservice
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI(v1)");
             });
 
-            loggerFactory.AddContext(LogLevel.Information, Configuration.GetConnectionString("MicroservicesDB"));
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var tenantContext = scope.ServiceProvider.GetService<TenantContext>();
+                var companyTontext = scope.ServiceProvider.GetService<CompanyContext>();
+                AddInMemory(tenantContext, companyTontext);
+            }
 
-           
+            //loggerFactory.AddContext(LogLevel.Information, Configuration.GetConnectionString("MicroservicesDB           
+        }
+
+        private static void AddInMemory(TenantContext tenantContext, CompanyContext companyContext)
+        {
+            tenantContext.Add(new Tenant
+            {
+                Id = 1,
+                Name = "Fast and Furious Auto Postos",
+                Host = "www.fastandfouriousAP.com.br",
+                TenantId = 0
+            });
+
+            companyContext.Add(new Company
+            {
+                Id = 1,
+                Name = "Empresa Teste 001",
+                CNPJ = "51.965.287/0001-25",
+                Email = "empteste001@api.com.br",
+                Whats = "47999999999",
+                TenantId = 1
+
+            });
+            companyContext.Add(new Company
+            {
+                Id = 2,
+                Name = "Empresa Teste 002",
+                CNPJ = "40.871.824/0001-51",
+                Email = "empteste002@api.com.br",
+                Whats = "47999000000",
+                TenantId = 1
+
+            });
+            companyContext.Add(new Company
+                {
+                    Id = 3,
+                    Name = "Empresa Teste 003",
+                    CNPJ = "83.145.029/0001-99",
+                    Email = "empteste003@api.com.br",
+                    Whats = "47999888888",
+                    TenantId = 1
+
+                });
+            companyContext.Add(new Company
+                {
+                    Id = 4,
+                    Name = "Empresa Teste 004",
+                    CNPJ = "14.145.576/0001-51",
+                    Email = "empteste004@api.com.br",
+                    Whats = "47999111111",
+                    TenantId = 1
+
+                });
+            tenantContext.SaveChanges();
+            companyContext.SaveChanges();
         }
     }
-}
+ }

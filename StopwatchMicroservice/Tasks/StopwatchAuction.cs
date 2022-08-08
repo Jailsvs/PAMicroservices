@@ -21,7 +21,6 @@ namespace StopwatchMicroservice.Tasks
         private readonly ConcurrentDictionary<int, StopwatchAuction> _owner;
         private HttpClient _httpStopWSrv = new HttpClient();
 
-
     public StopwatchAuction(int auctionId, int time, DateTime openingDate, ConcurrentDictionary<int, StopwatchAuction> owner)
         {
             _auctionId = auctionId;
@@ -42,13 +41,11 @@ namespace StopwatchMicroservice.Tasks
             s.Stop();
             try
             {
-                
                 if (s._openingDate <= DateTime.Now)
                 {
                     s._count -= 1;
                     if (s._httpStopWSrv.BaseAddress == null)
                     {
-
                         s._httpStopWSrv.BaseAddress = new Uri(ServiceConstants.STOPWATCHSERVICEAPI_URL);
                         s._httpStopWSrv.DefaultRequestHeaders.Accept.Clear();
                         s._httpStopWSrv.DefaultRequestHeaders.Accept.Add(
