@@ -88,8 +88,18 @@ namespace UserMicroservice.Repository
 
         public void IncreaseDecreaseBids(int userId, int bidsQuantity)
         {
-            var commandText = "UPDATE TB_USER SET AvailableBids = AvailableBids + "+ bidsQuantity + " WHERE ID = "+ userId;
-            _dbContext.Database.ExecuteSqlCommand(commandText);
+            //var commandText = "UPDATE TB_USER SET AvailableBids = AvailableBids + "+ bidsQuantity + " WHERE ID = "+ userId;
+            //_dbContext.Database.ExecuteSqlCommand(commandText);
+            User user = _dbContext.Tb_User.Find(userId);
+            if (user == null)
+                throw new Exception("User not found");
+            if (user != null)
+            {
+                user.AvailableBids += bidsQuantity;
+                _dbContext.Entry(user).Property("AvailableBids").IsModified = true;
+            }
+
+            Commit();
         }
 
         public void Insert(User entity)

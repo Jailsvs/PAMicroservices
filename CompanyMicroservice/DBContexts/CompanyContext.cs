@@ -7,9 +7,7 @@ namespace CompanyMicroservice.DBContexts
     {
 
         public CompanyContext(DbContextOptions<CompanyContext> options): base(options)
-        {
-
-        }
+        {}
         public DbSet<Company> Tb_Company { get; set; }
        
         protected override void OnModelCreating(ModelBuilder modelBuilder)

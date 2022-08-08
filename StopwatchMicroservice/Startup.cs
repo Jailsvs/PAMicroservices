@@ -15,7 +15,7 @@ using SharedMicroservice.Constants;
 using SharedMicroservice.DTO;
 using StopwatchMicroservice.Services;
 using StopwatchMicroservice.Tasks;
-using ExemploLogCore.ExtensionLogger;
+using ExtensionLogger;
 using SwaggerOptions = SharedMicroservice.Options.SwaggerOptions;
 using System.Diagnostics;
 
@@ -36,16 +36,11 @@ namespace StopwatchMicroservice
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddControllers();
             services.AddCors();
-
             services.AddTransient<IStopwatchService, StopwatchService>();
-            //services.AddTransient<HttpClient>();
-
             services.AddTransient<StopwatchHub>();
 
             ConcurrentDictionary<int, StopwatchAuction> _stopwatchs = new ConcurrentDictionary<int, StopwatchAuction>();
-
             services.AddSingleton(_stopwatchs);
-
             services.AddSwaggerGen(x => {
                 x.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
                 {
@@ -55,7 +50,6 @@ namespace StopwatchMicroservice
             });
 
             services.AddSignalR();
-
             _ = AllAuctions(_stopwatchs);
 
         }
@@ -69,7 +63,7 @@ namespace StopwatchMicroservice
                 new MediaTypeWithQualityHeaderValue("application/json"));
             try
             {
-                HttpResponseMessage response = await _httpClientAuctionSrv.GetAsync("api/Auction?tenantId=3");
+                HttpResponseMessage response = await _httpClientAuctionSrv.GetAsync("api/Auction?tenantId=1");
                 if (response.IsSuccessStatusCode)
                 {
                     var data = await response.Content.ReadAsStringAsync();
@@ -81,11 +75,11 @@ namespace StopwatchMicroservice
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                StopwatchAuction s = new StopwatchAuction(6, 1000, DateTime.Parse("2019-11-20T20:00:00"), stopwatchs);
-                bool add = stopwatchs.TryAdd(6, s);
-                Debug.WriteLine("stopwatch add: " + add);
+                //StopwatchAuction s = new StopwatchAuction(6, 1000, DateTime.Parse("2019-11-20T20:00:00"), stopwatchs);
+                //bool add = stopwatchs.TryAdd(6, s);
+                Debug.WriteLine("stopwatch add error: " + e.Message);
             }
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -96,15 +90,9 @@ namespace StopwatchMicroservice
                 app.UseDeveloperExceptionPage();
             }
             app.UseCors(option => option.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
-            //app.UseCors(option => option.AllowAnyOrigin(). AllowAnyHeader().AllowAnyMethod());
-
-
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -116,8 +104,6 @@ namespace StopwatchMicroservice
 
             app.UseSwagger(option => { option.RouteTemplate = swaggerOptions.JsonRoute; });
             app.UseSwaggerUI(option => { option.SwaggerEndpoint(swaggerOptions.UIEndpoint, swaggerOptions.Description); });
-
-
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -125,9 +111,7 @@ namespace StopwatchMicroservice
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI(v1)");
             });
 
-
-            loggerFactory.AddContext(LogLevel.Information, Configuration.GetConnectionString("MicroservicesDB"));
-
+            //loggerFactory.AddContext(LogLevel.Information, Configuration.GetConnectionString("MicroservicesDB"));
         }
 
     }

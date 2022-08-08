@@ -46,12 +46,10 @@ namespace CompanyMicroservice.Services
 
             Tenant tenant = _mapper.Map<Tenant>(tenantDTO);
 
-            //using (var scope = new TransactionScope()) //TransactionScopeAsyncFlowOption.Enabled))
             {
-                _tenantRepository.Insert(tenant);//.ConfigureAwait(false);
+                _tenantRepository.Insert(tenant);
                 if (!_tenantRepository.Commit())
                     throw new Exception("Inserting a tenant failed on save.");
-                //scope.Complete();
                 return tenant.Id;
             }
         }
@@ -67,14 +65,11 @@ namespace CompanyMicroservice.Services
         public void Alter(TenantDTO tenantDTO)
         {
             Tenant tenant = _mapper.Map<Tenant>(tenantDTO);
-            if (tenant.Id != 0)
-            {
-                //using (var scope = new TransactionScope()) // TransactionScopeAsyncFlowOption.Enabled))
+            if (tenant.Id != 0){
                 {
-                    _tenantRepository.Update(tenant);//.ConfigureAwait(false);
+                    _tenantRepository.Update(tenant);
                     if (!_tenantRepository.Commit())
                         throw new Exception("Updating a tenant failed on save.");
-                    //scope.Complete();
                 }
             }
         }
@@ -83,7 +78,6 @@ namespace CompanyMicroservice.Services
         {
             var tenants = _tenantRepository.GetAllList();
             List<TenantDTO> tenantDTOs = _mapper.Map<List<TenantDTO>>(tenants.ToList());
-
             return tenantDTOs;
         }
 

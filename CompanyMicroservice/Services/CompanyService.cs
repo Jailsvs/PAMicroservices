@@ -40,7 +40,6 @@ namespace CompanyMicroservice.Services
             var companies = _companyRepository.Get(a => a.CNPJ.ToLower().Trim().Equals(cnpj.ToLower().Trim()) &&
                                                  a.TenantId == tenantId);
             List<CompanyDTO> companiesDTOs = _mapper.Map<List<CompanyDTO>>(companies.ToList());
-
             return companiesDTOs;
         }
 
@@ -54,15 +53,10 @@ namespace CompanyMicroservice.Services
                 throw new Exception("Company already exists with CNPJ [" + companyDTO.CNPJ + "]");
 
             Company company = _mapper.Map<Company>(companyDTO);
-
-            //using (var scope = new TransactionScope())// TransactionScopeAsyncFlowOption.Enabled))
-            {
-                _companyRepository.Insert(company);//.ConfigureAwait(false);
-                if (!_companyRepository.Commit())
-                    throw new Exception("Inserting a company failed on save.");
-                //scope.Complete();
-                return company.Id;
-            }
+            _companyRepository.Insert(company);
+            if (!_companyRepository.Commit())
+                throw new Exception("Inserting a company failed on save.");
+            return company.Id;
         }
 
 
@@ -76,15 +70,10 @@ namespace CompanyMicroservice.Services
         public void Alter(CompanyDTO companyDTO)
         {
             Company company = _mapper.Map<Company>(companyDTO);
-            if (company.Id != 0)
-            {
-                //using (var scope = new TransactionScope())// TransactionScopeAsyncFlowOption.Enabled))
-                {
-                    _companyRepository.Update(company);//.ConfigureAwait(false);
-                    if (!_companyRepository.Commit())
-                        throw new Exception("Updating a company failed on save.");
-                    //scope.Complete();
-                }
+            if (company.Id != 0){
+                _companyRepository.Update(company);
+                if (!_companyRepository.Commit())
+                    throw new Exception("Updating a company failed on save.");
             }
             
         }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using UserMicroservice.Models;
 
 namespace UserMicroservice.DBContexts
@@ -7,9 +8,7 @@ namespace UserMicroservice.DBContexts
     {
 
         public UserContext(DbContextOptions<UserContext> options): base(options)
-        {
-
-        }
+        {}
         public DbSet<User> Tb_User { get; set; }
        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -19,7 +18,7 @@ namespace UserMicroservice.DBContexts
                 {
                     Id = 1,
                     Name = "Jailson VS",
-                    AvailableBids = 100,
+                    AvailableBids = 10,
                     Email = "user001@gmail.com",
                     Password = "R$%TGss5",
                     TenantId = 1,

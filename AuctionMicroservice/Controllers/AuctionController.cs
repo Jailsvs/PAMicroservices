@@ -12,7 +12,6 @@ namespace AuctionMicroservice.Controllers
     public class AuctionController : ControllerBase
     {
         private readonly IAuctionService _auctionService;
-        
         public AuctionController(IAuctionService auctionService)
         {
             _auctionService = auctionService;
@@ -21,7 +20,6 @@ namespace AuctionMicroservice.Controllers
         [HttpGet]
         public IActionResult Get([FromQuery] int tenantId)
         {
-   
             var auctions = _auctionService.ReturnAll(tenantId);
             return new OkObjectResult(auctions);
         }
@@ -32,7 +30,6 @@ namespace AuctionMicroservice.Controllers
             var auction = _auctionService.ReturnById(id);
             if (auction == null)
                 return new NotFoundResult();
-
             return new OkObjectResult(auction);
         }
 
@@ -40,7 +37,6 @@ namespace AuctionMicroservice.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] AuctionProductDTO auctionProductDTO, [FromQuery] int tenantId)
         {
-
             auctionProductDTO.TenantId = tenantId;
             int dto_id = _auctionService.Add(auctionProductDTO);
             auctionProductDTO.Id = dto_id;
@@ -63,32 +59,25 @@ namespace AuctionMicroservice.Controllers
         {
             AuctionProductIndexDTO auction = _auctionService.ReturnById(id);
             UserIndexDTO user = await _auctionService.GetUser(auctionBidDTO.UserId);
-
             if ((user == null) || (user.AvailableBids <= 0))
                 throw new Exception("User wihthout bids available");
 
-            //await _auctionService.DecreaseUserBid(auctionBidDTO.UserId);
             _ = _auctionService.DecreaseUserBid(auctionBidDTO.UserId);
-
             auctionBidDTO.TenantId = tenantId != 0 ? tenantId : user.TenantId;;
             auctionBidDTO.AuctionProductId = id;
             _auctionService.BidAuction(auctionBidDTO);
             return new OkResult();
         }
 
-
         [HttpPut]
         public IActionResult Put([FromBody] AuctionProductDTO auctionProductDTO)
         {
-            if (auctionProductDTO != null)
-            {
+            if (auctionProductDTO != null) {
                 _auctionService.Alter(auctionProductDTO);
                 return new OkResult();
             }
             return new NoContentResult();
         }
-
-      
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)

@@ -1,8 +1,8 @@
 {
   "runtimeOptions": {
     "additionalProbingPaths": [
-      "C:\\Users\\Jailson\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\Jailson\\.nuget\\packages"
+      "C:\\Users\\jails\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\jails\\.nuget\\packages"
     ]
   }
 }

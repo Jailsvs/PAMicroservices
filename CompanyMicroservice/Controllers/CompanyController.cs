@@ -13,11 +13,9 @@ namespace CompanyMicroservice.Controllers
     [Route("api/[controller]")]
     public class CompanyController : ControllerBase
     {
-
         private readonly ICompanyService _companyService;
         private readonly ITenantService _tenantService;
         private readonly ILogger _logger;
-
         public CompanyController(ICompanyService companyService, ITenantService tenantService, ILogger<CompanyController> logger)
         {
             _companyService = companyService;
@@ -33,9 +31,6 @@ namespace CompanyMicroservice.Controllers
         [HttpGet]
         public IActionResult Get([FromQuery] int tenantId)
         {
-            /*var ret = _tenantService.ReturnByHostName(HttpContext.Request.Host.Value);
-            if (ret == null)
-                throw new Exception("Tenant not found");*/
             var companies = _companyService.ReturnAll(tenantId);
             return new OkObjectResult(companies);
         }
@@ -63,10 +58,6 @@ namespace CompanyMicroservice.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] CompanyDTO companyDTO, [FromQuery] int tenantId)
         {
-            /*var ret = _tenantService.ReturnByHostName(HttpContext.Request.Host.Value);
-            if (ret == null)
-                throw new Exception("Tenant not found");*/
-
             companyDTO.TenantId = tenantId;
             int dto_id = _companyService.Add(companyDTO);
             return CreatedAtAction(nameof(Get), new { id = dto_id });

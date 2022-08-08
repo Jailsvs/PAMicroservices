@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExemploLogCore.Model
+namespace Model
 {
     public class LogEvento
     {
@@ -15,7 +15,7 @@ namespace ExemploLogCore.Model
     }
 
     /*
-     --SCRIPT
+     --SCRIPT (não contém migration)
         CREATE TABLE EVENTLOG (
         ID INT IDENTITY(1,1) NOT NULL,
         EVENTID INT NULL,

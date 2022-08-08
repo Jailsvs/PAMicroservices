@@ -1,29 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using AutoMapper;
+using ExtensionLogger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using SharedMicroservice.DTO;
 using SharedMicroservice.Services;
 using UserMicroservice.DBContexts;
 using UserMicroservice.MappingProfiles;
+using UserMicroservice.Models;
 using UserMicroservice.Repository;
 using UserMicroservice.Services;
-using Microsoft.Extensions.PlatformAbstractions;
-using System.IO;
-using ExemploLogCore.ExtensionLogger;
-using Swashbuckle.AspNetCore.Swagger;
-using SharedMicroservice.Options;
 using SwaggerOptions = SharedMicroservice.Options.SwaggerOptions;
 
 namespace UserMicroservice
@@ -43,13 +32,13 @@ namespace UserMicroservice
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddControllers();
             services.AddCors();
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddDbContext<UserContext>(o => o.UseSqlServer(Configuration.GetConnectionString("MicroservicesDB")));
 
+            //services.AddDbContext<UserContext>(o => o.UseSqlServer(Configuration.GetConnectionString("MicroservicesDB")));
+            services.AddDbContext<UserContext>(o => o.UseInMemoryDatabase(Configuration.GetConnectionString("MicroservicesDB")));
+            
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IEncrypter , Encrypter>();
-            //services.AddTransient<HttpClient>();
 
             var config = new AutoMapper.MapperConfiguration(cfg =>
             {
@@ -76,13 +65,9 @@ namespace UserMicroservice
                 app.UseDeveloperExceptionPage();
             }
             app.UseCors(option => option.AllowAnyOrigin());
-
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -90,12 +75,10 @@ namespace UserMicroservice
 
 
             var swaggerOptions = new SwaggerOptions();
-            Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
+            Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions); //bind with model by configuration appsettings.json
 
             app.UseSwagger(option => { option.RouteTemplate = swaggerOptions.JsonRoute; });
             app.UseSwaggerUI(option => { option.SwaggerEndpoint(swaggerOptions.UIEndpoint, swaggerOptions.Description); });
-
-
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -103,8 +86,55 @@ namespace UserMicroservice
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI(v1)");
             });
 
-            loggerFactory.AddContext(LogLevel.Information, Configuration.GetConnectionString("MicroservicesDB"));
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = scope.ServiceProvider.GetService<UserContext>();
+                AddInMemory(context);              
+            }
+            //var context = app.ApplicationServices.GetService<UserContext>();
+            //AddInMemory(context);
+            //loggerFactory.AddContext(LogLevel.Information, Configuration.GetConnectionString("MicroservicesDB"));
 
+            }
+
+        private static void AddInMemory(UserContext context)
+        {
+            context.Add(new User
+            {
+                Id = 1,
+                Name = "Jailson VS",
+                AvailableBids = 10,
+                Email = "user001@gmail.com",
+                Password = "R$%TGss5",
+                TenantId = 1,
+                UserType = "C",
+                Whats = "47999999999"
+
+            });
+            context.Add(new User
+                {
+                    Id = 2,
+                    Name = "Jhon WF",
+                    AvailableBids = 100,
+                    Email = "user002@gmail.com",
+                    Password = "#$#HJJTT@88",
+                    TenantId = 1,
+                    UserType = "C",
+                    Whats = "47999000000"
+                });
+            context.Add(
+                new User
+                {
+                    Id = 3,
+                    Name = "Kay QG",
+                    AvailableBids = 100,
+                    Email = "user002@gmail.com",
+                    Password = "UY6%$$885",
+                    TenantId = 1,
+                    UserType = "C",
+                    Whats = "47999888888"
+                });
+            context.SaveChanges();
         }
     }
 }
