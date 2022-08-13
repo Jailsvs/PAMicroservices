@@ -18,6 +18,9 @@ using StopwatchMicroservice.Tasks;
 using ExtensionLogger;
 using SwaggerOptions = SharedMicroservice.Options.SwaggerOptions;
 using System.Diagnostics;
+using System.Net;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 
 namespace StopwatchMicroservice
 {
@@ -85,10 +88,29 @@ namespace StopwatchMicroservice
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-            if (env.IsDevelopment())
+            /*if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }
+            }*/
+
+            app.UseExceptionHandler(
+               options =>
+               {
+                   options.Run(
+                       async context =>
+                       {
+                           context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                           context.Response.ContentType = "application/json";
+                           var exceptionObject = context.Features.Get<IExceptionHandlerFeature>();
+                           if (null != exceptionObject)
+                           {
+                               var result = JsonConvert.SerializeObject(new { error = exceptionObject.Error.Message });
+                               await context.Response.WriteAsync(result).ConfigureAwait(false);
+                           }
+                       });
+               }
+           );
+
             app.UseCors(option => option.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -111,7 +133,10 @@ namespace StopwatchMicroservice
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI(v1)");
             });
 
-            //loggerFactory.AddContext(LogLevel.Information, Configuration.GetConnectionString("MicroservicesDB"));
+            if (!Configuration.GetValue<bool>("InMemoryDatabase"))
+            {
+                loggerFactory.AddContext(LogLevel.Information, Configuration.GetConnectionString("MicroservicesDB"));
+            }
         }
 
     }

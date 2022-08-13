@@ -14,6 +14,10 @@ using ExtensionLogger;
 using SwaggerOptions = SharedMicroservice.Options.SwaggerOptions;
 using System;
 using AuctionMicroservice.Models;
+using System.Net;
+using Microsoft.AspNetCore.Diagnostics;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace AuctionMicroservice
 {
@@ -32,8 +36,11 @@ namespace AuctionMicroservice
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddControllers();
             services.AddCors();
-            //services.AddDbContext<AuctionContext>(o => o.UseSqlServer(Configuration.GetConnectionString("MicroservicesDB")));          
-            services.AddDbContext<AuctionContext>(o => o.UseInMemoryDatabase(Configuration.GetConnectionString("MicroservicesDB")));
+            if (Configuration.GetValue<bool>("InMemoryDatabase"))
+            { services.AddDbContext<AuctionContext>(o => o.UseInMemoryDatabase(Configuration.GetConnectionString("MicroservicesDB"))); }
+            else
+            { services.AddDbContext<AuctionContext>(o => o.UseSqlServer(Configuration.GetConnectionString("MicroservicesDB"))); }
+
 
             services.AddTransient<IAuctionRepository, AuctionRepository>();
             services.AddTransient<IAuctionService, AuctionService>();
@@ -57,9 +64,26 @@ namespace AuctionMicroservice
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-            if (env.IsDevelopment()){
+            /*if (env.IsDevelopment()){
                 app.UseDeveloperExceptionPage();
-            }
+            }*/
+            app.UseExceptionHandler(
+               options =>
+               {
+                   options.Run(
+                       async context =>
+                       {
+                           context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                           context.Response.ContentType = "application/json";
+                           var exceptionObject = context.Features.Get<IExceptionHandlerFeature>();
+                           if (null != exceptionObject)
+                           {
+                               var result = JsonConvert.SerializeObject(new { error = exceptionObject.Error.Message });
+                               await context.Response.WriteAsync(result).ConfigureAwait(false);
+                           }
+                       });
+               }
+           );
 
             app.UseCors(option => option.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseHttpsRedirection();
@@ -82,12 +106,18 @@ namespace AuctionMicroservice
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI(v1)");
             });
 
-            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            if (Configuration.GetValue<bool>("InMemoryDatabase"))
             {
-                var context = scope.ServiceProvider.GetService<AuctionContext>();
-                AddInMemory(context);
+                using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    var context = scope.ServiceProvider.GetService<AuctionContext>();
+                    AddInMemory(context);
+                }
             }
-            //loggerFactory.AddContext(LogLevel.Information, Configuration.GetConnectionString("MicroservicesDB"));          
+            if (!Configuration.GetValue<bool>("InMemoryDatabase"))
+            {
+                loggerFactory.AddContext(LogLevel.Information, Configuration.GetConnectionString("MicroservicesDB"));
+            }
         }
 
         private static void AddInMemory(AuctionContext context)
@@ -96,7 +126,7 @@ namespace AuctionMicroservice
             {
                 Id = 1,
                 MinValue = 100,
-                OpeningDate = DateTime.Parse("2022-08-06T17:00:00"),
+                OpeningDate = DateTime.Today.AddMinutes(-5),
                 Description = "Bola Futsal Topper",
                 StopwatchTime = 100,
                 BidValue = 1,
@@ -109,7 +139,7 @@ namespace AuctionMicroservice
             {
                 Id = 2,
                 MinValue = 200,
-                OpeningDate = DateTime.Parse("2022-08-06T17:00:00"),
+                OpeningDate = DateTime.Today.AddMinutes(-10),
                 Description = "Furadeira Bosh 550W",
                 StopwatchTime = 100,
                 BidValue = 1,

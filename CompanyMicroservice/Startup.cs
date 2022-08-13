@@ -13,6 +13,10 @@ using Microsoft.Extensions.Logging;
 using ExtensionLogger;
 using SwaggerOptions = SharedMicroservice.Options.SwaggerOptions;
 using CompanyMicroservice.Models;
+using System.Net;
+using Microsoft.AspNetCore.Diagnostics;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace CompanyMicroservice
 {
@@ -32,10 +36,16 @@ namespace CompanyMicroservice
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddControllers();
             services.AddCors();
-            /*services.AddDbContext<CompanyContext>(o => o.UseSqlServer(Configuration.GetConnectionString("MicroservicesDB")));
-            services.AddDbContext<TenantContext>(o => o.UseSqlServer(Configuration.GetConnectionString("MicroservicesDB")));*/
-            services.AddDbContext<CompanyContext>(o => o.UseInMemoryDatabase(Configuration.GetConnectionString("MicroservicesDB")));
-            services.AddDbContext<TenantContext>(o => o.UseInMemoryDatabase(Configuration.GetConnectionString("MicroservicesDB")));
+            if (Configuration.GetValue<bool>("InMemoryDatabase"))
+            {
+                services.AddDbContext<CompanyContext>(o => o.UseInMemoryDatabase(Configuration.GetConnectionString("MicroservicesDB")));
+                services.AddDbContext<TenantContext>(o => o.UseInMemoryDatabase(Configuration.GetConnectionString("MicroservicesDB")));
+            }
+            else
+            {
+                services.AddDbContext<CompanyContext>(o => o.UseSqlServer(Configuration.GetConnectionString("MicroservicesDB")));
+                services.AddDbContext<TenantContext>(o => o.UseSqlServer(Configuration.GetConnectionString("MicroservicesDB")));
+            }
 
             services.AddTransient<ICompanyRepository, CompanyRepository>();
             services.AddTransient<ICompanyService, CompanyService>();
@@ -65,10 +75,29 @@ namespace CompanyMicroservice
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
 
-            if (env.IsDevelopment())
+            /*if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }
+            }*/
+
+            app.UseExceptionHandler(
+               options =>
+               {
+                   options.Run(
+                       async context =>
+                       {
+                           context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                           context.Response.ContentType = "application/json";
+                           var exceptionObject = context.Features.Get<IExceptionHandlerFeature>();
+                           if (null != exceptionObject)
+                           {
+                               var result = JsonConvert.SerializeObject(new { error = exceptionObject.Error.Message });
+                               await context.Response.WriteAsync(result).ConfigureAwait(false);
+                           }
+                       });
+               }
+           );
+
             app.UseCors(option => option.AllowAnyOrigin());
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -90,14 +119,20 @@ namespace CompanyMicroservice
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI(v1)");
             });
 
-            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            if (Configuration.GetValue<bool>("InMemoryDatabase"))
             {
-                var tenantContext = scope.ServiceProvider.GetService<TenantContext>();
-                var companyTontext = scope.ServiceProvider.GetService<CompanyContext>();
-                AddInMemory(tenantContext, companyTontext);
+                using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    var tenantContext = scope.ServiceProvider.GetService<TenantContext>();
+                    var companyTontext = scope.ServiceProvider.GetService<CompanyContext>();
+                    AddInMemory(tenantContext, companyTontext);
+                }
             }
 
-            //loggerFactory.AddContext(LogLevel.Information, Configuration.GetConnectionString("MicroservicesDB           
+            if (!Configuration.GetValue<bool>("InMemoryDatabase"))
+            {
+                loggerFactory.AddContext(LogLevel.Information, Configuration.GetConnectionString("MicroservicesDB"));
+            }
         }
 
         private static void AddInMemory(TenantContext tenantContext, CompanyContext companyContext)

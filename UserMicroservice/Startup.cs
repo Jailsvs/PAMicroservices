@@ -1,13 +1,18 @@
 using AutoMapper;
 using ExtensionLogger;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using SharedMicroservice.Services;
+using System.IO;
+using System.Net;
 using UserMicroservice.DBContexts;
 using UserMicroservice.MappingProfiles;
 using UserMicroservice.Models;
@@ -33,8 +38,11 @@ namespace UserMicroservice
             services.AddControllers();
             services.AddCors();
 
-            //services.AddDbContext<UserContext>(o => o.UseSqlServer(Configuration.GetConnectionString("MicroservicesDB")));
-            services.AddDbContext<UserContext>(o => o.UseInMemoryDatabase(Configuration.GetConnectionString("MicroservicesDB")));
+            if (Configuration.GetValue<bool>("InMemoryDatabase"))
+            { services.AddDbContext<UserContext>(o => o.UseInMemoryDatabase(Configuration.GetConnectionString("MicroservicesDB"))); }
+            else
+            { services.AddDbContext<UserContext>(o => o.UseSqlServer(Configuration.GetConnectionString("MicroservicesDB"))); }
+            
             
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserService, UserService>();
@@ -60,10 +68,29 @@ namespace UserMicroservice
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-            if (env.IsDevelopment())
+            /*if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }
+            }*/
+                        
+            app.UseExceptionHandler(
+                options =>
+                {
+                    options.Run(
+                        async context =>
+                        {
+                            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                            context.Response.ContentType = "application/json";
+                            var exceptionObject = context.Features.Get<IExceptionHandlerFeature>();
+                            if (null != exceptionObject)
+                            {
+                                var result = JsonConvert.SerializeObject(new { error = exceptionObject.Error.Message });
+                                await context.Response.WriteAsync(result).ConfigureAwait(false);
+                            }
+                        });
+                }
+            );
+
             app.UseCors(option => option.AllowAnyOrigin());
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -73,7 +100,7 @@ namespace UserMicroservice
                 endpoints.MapControllers();
             });
 
-
+            
             var swaggerOptions = new SwaggerOptions();
             Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions); //bind with model by configuration appsettings.json
 
@@ -86,16 +113,22 @@ namespace UserMicroservice
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI(v1)");
             });
 
-            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            if (Configuration.GetValue<bool>("InMemoryDatabase"))
             {
-                var context = scope.ServiceProvider.GetService<UserContext>();
-                AddInMemory(context);              
+                using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    var context = scope.ServiceProvider.GetService<UserContext>();
+                    AddInMemory(context);
+                }
             }
             //var context = app.ApplicationServices.GetService<UserContext>();
             //AddInMemory(context);
-            //loggerFactory.AddContext(LogLevel.Information, Configuration.GetConnectionString("MicroservicesDB"));
 
+            if (!Configuration.GetValue<bool>("InMemoryDatabase"))
+            {
+                loggerFactory.AddContext(LogLevel.Information, Configuration.GetConnectionString("MicroservicesDB"));
             }
+        }
 
         private static void AddInMemory(UserContext context)
         {
@@ -103,7 +136,7 @@ namespace UserMicroservice
             {
                 Id = 1,
                 Name = "Jailson VS",
-                AvailableBids = 10,
+                AvailableBids = 5,
                 Email = "user001@gmail.com",
                 Password = "R$%TGss5",
                 TenantId = 1,
@@ -115,7 +148,7 @@ namespace UserMicroservice
                 {
                     Id = 2,
                     Name = "Jhon WF",
-                    AvailableBids = 100,
+                    AvailableBids = 10,
                     Email = "user002@gmail.com",
                     Password = "#$#HJJTT@88",
                     TenantId = 1,
@@ -127,7 +160,7 @@ namespace UserMicroservice
                 {
                     Id = 3,
                     Name = "Kay QG",
-                    AvailableBids = 100,
+                    AvailableBids = 15,
                     Email = "user002@gmail.com",
                     Password = "UY6%$$885",
                     TenantId = 1,
